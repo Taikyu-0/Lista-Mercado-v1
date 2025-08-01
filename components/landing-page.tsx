@@ -41,7 +41,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
     },
     {
       icon: <Dog className="w-6 h-6 text-yellow-500" />,
-      title: "Não pode esquecer dos bichos",
+      title: "Ainda é um teste",
       description: ""
     },
     {
