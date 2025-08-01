@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Plus, ShoppingCart, Trash2, ArrowLeft, ChevronUp, ChevronDown } from "lucide-react"
+import { Plus, ShoppingCart, Trash2, ArrowLeft, ChevronUp, ChevronDown, BarChart3 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useIsMobile } from "@/components/ui/use-mobile"
 
@@ -20,6 +20,7 @@ interface GroceryItem {
 
 interface GroceryListProps {
   onBack: () => void
+  onShowReport: (checkedItems: GroceryItem[]) => void
 }
 
 const initialItems: GroceryItem[] = [
@@ -73,7 +74,7 @@ const initialItems: GroceryItem[] = [
 
 const categories = ["Frutas e Verduras", "Laticínios", "Carnes e Peixes", "Padaria", "Mercearia", "Limpeza"]
 
-export function GroceryList({ onBack }: GroceryListProps) {
+export function GroceryList({ onBack, onShowReport }: GroceryListProps) {
   const [items, setItems] = useState<GroceryItem[]>(initialItems)
   const [newItem, setNewItem] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Frutas e Verduras")
@@ -167,6 +168,17 @@ export function GroceryList({ onBack }: GroceryListProps) {
               <Badge variant="outline" className={isMobile ? 'text-xs' : ''}>Total: {getTotalItems()}</Badge>
               <Badge variant="outline" className={isMobile ? 'text-xs' : ''}>Marcados: {getCheckedItems()}</Badge>
               <Badge variant="outline" className={isMobile ? 'text-xs' : ''}>Restantes: {getTotalItems() - getCheckedItems()}</Badge>
+              {getCheckedItems() > 0 && (
+                <Button
+                  onClick={() => onShowReport(items.filter(item => item.checked))}
+                  variant="outline"
+                  size="sm"
+                  className={`text-blue-600 border-blue-300 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-blue-900/20 bg-transparent ${isMobile ? 'h-6 text-xs' : ''}`}
+                >
+                  <BarChart3 className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} mr-1`} />
+                  {isMobile ? 'Relatório' : 'Ver Relatório'}
+                </Button>
+              )}
             </div>
           </div>
         </div>

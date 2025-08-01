@@ -4,11 +4,13 @@ import { useState } from "react"
 import * as React from "react"
 import { LandingPage } from "./landing-page"
 import { GroceryList } from "./grocery-list"
+import { GroceryReport } from "./grocery-report"
 import { useIsMobile } from "@/components/ui/use-mobile"
 
 export function AppContainer() {
-  const [currentView, setCurrentView] = useState<'landing' | 'list'>('landing')
+  const [currentView, setCurrentView] = useState<'landing' | 'list' | 'report'>('landing')
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [checkedItems, setCheckedItems] = useState<any[]>([])
   const isMobile = useIsMobile()
 
   // Prevent hydration mismatch
@@ -31,6 +33,27 @@ export function AppContainer() {
     setIsTransitioning(true)
     setTimeout(() => {
       setCurrentView('landing')
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 100)
+    }, 400)
+  }
+
+  const handleShowReport = (items: any[]) => {
+    setCheckedItems(items)
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentView('report')
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 100)
+    }, 400)
+  }
+
+  const handleBackFromReport = () => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentView('list')
       setTimeout(() => {
         setIsTransitioning(false)
       }, 100)
@@ -87,7 +110,24 @@ export function AppContainer() {
           opacity: currentView === 'list' && !isTransitioning ? 1 : 0
         }}
       >
-        <GroceryList onBack={handleBack} />
+        <GroceryList onBack={handleBack} onShowReport={handleShowReport} />
+      </div>
+
+      {/* Grocery Report */}
+      <div 
+        className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+          currentView === 'report' && !isTransitioning 
+            ? 'translate-y-0 opacity-100 scale-100' 
+            : 'translate-y-full opacity-0 scale-95'
+        }`}
+        style={{
+          transform: currentView === 'report' && !isTransitioning 
+            ? 'translateY(0) scale(1)' 
+            : 'translateY(100%) scale(0.95)',
+          opacity: currentView === 'report' && !isTransitioning ? 1 : 0
+        }}
+      >
+        <GroceryReport onBack={handleBackFromReport} checkedItems={checkedItems} />
       </div>
 
       {/* Overlay de transição */}
